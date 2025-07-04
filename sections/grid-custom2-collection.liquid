@@ -1,0 +1,170 @@
+{% schema %}
+{
+  "name": "Collection Grid",
+  "settings": [
+    {
+      "type": "collection",
+      "id": "collection",
+      "label": "Select Collection"
+    },
+    {
+      "type": "checkbox",
+      "id": "use_pagination",
+      "label": "Enable Pagination",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "use_bar_lm",
+      "label": "Use Load More Button",
+      "default": false
+    },
+    {
+      "type": "range",
+      "id": "limit",
+      "label": "Products per page",
+      "min": 4,
+      "max": 50,
+      "step": 1,
+      "default": 12
+    },
+    {
+      "type": "range",
+      "id": "col_pr",
+      "label": "Columns on Desktop",
+      "min": 2,
+      "max": 6,
+      "step": 1,
+      "default": 4
+    },
+    {
+      "type": "range",
+      "id": "col_pr_tb",
+      "label": "Columns on Tablet",
+      "min": 1,
+      "max": 4,
+      "step": 1,
+      "default": 2
+    },
+    {
+      "type": "range",
+      "id": "col_pr_mb",
+      "label": "Columns on Mobile",
+      "min": 1,
+      "max": 3,
+      "step": 1,
+      "default": 1
+    },
+    {
+      "type": "checkbox",
+      "id": "use_eq_height",
+      "label": "Use Equal Height",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "show_vendor",
+      "label": "Show Vendor",
+      "default": false
+    },
+    {
+      "type": "checkbox",
+      "id": "use_cdt",
+      "label": "Use Countdown",
+      "default": false
+    }
+  ],
+  "presets": [
+    {
+      "name": "Collection Grid",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+{% liquid
+assign se_settings = section.settings
+assign use_pagination = se_settings.use_pagination
+assign use_bar_lm = se_settings.use_bar_lm
+assign limit = se_settings.limit
+assign col = se_settings.col_pr
+assign col_tb = se_settings.col_pr_tb
+assign col_mb = se_settings.col_pr_mb
+assign sett_equal = se_settings.use_eq_height
+assign show_vendor = se_settings.show_vendor
+assign use_cdt = se_settings.use_cdt
+assign txt_cd = 'products.grid_items.offer_end_in' | t
+assign collection_prs = collection.products
+
+assign nt_canonical_url = canonical_url
+assign vl_filters = nt_canonical_url | split: '?q=' | last | split: '&sort_by' | first
+assign arr_vl_filters = vl_filters | split: '+nt+'
+
+assign has_fillter_stock = false
+assign has_fillter_price = false
+assign min_fillter_price = 0
+assign max_fillter_price = 0
+
+if nt_canonical_url contains 'filternt_stock%3dtrue'
+  assign has_fillter_stock = true
+endif
+
+if nt_canonical_url contains 'filternt_price%3d'
+  assign has_fillter_price = true
+  assign get_fillter_price = arr_vl_filters | where: 'filternt_price%3d' | first | remove: 'filternt_price%3d' | split: '+ntprice+'
+  assign min_fillter_price = get_fillter_price | first | plus: 0
+  assign max_fillter_price = get_fillter_price | last | plus: 0
+endif
+
+if has_fillter_stock
+  assign collection_prs = collection_prs | where: "available", true
+endif
+
+if has_fillter_price
+  assign collection_prs = collection_prs | where: "price", ">", min_fillter_price | where: "price", "<", max_fillter_price
+endif
+%}
+
+<h2 class="carousel-heading">{{ collection.title }}</h2>
+
+<div class="collection-filters">
+  <form method="get" action="">
+    <label for="price_min">Min Price:</label>
+    <input type="number" id="price_min" name="min_price" placeholder="0">
+
+    <label for="price_max">Max Price:</label>
+    <input type="number" id="price_max" name="max_price" placeholder="1000">
+
+    <label>
+      <input type="checkbox" name="q" value="filternt_stock%3dtrue"> In Stock Only
+    </label>
+
+    <button type="submit">Apply Filters</button>
+  </form>
+</div>
+
+<div class="collection-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px;">
+  {% for product in collection_prs %}
+    <div class="product-card" data-product-id="{{ product.id }}">
+      <a href="{{ product.url }}" class="image-container">
+        <img src="{{ product.featured_image | img_url: '600x450' }}" alt="{{ product.title }}">
+      </a>
+      <div class="info-row">
+        <div class="info-left">
+          <a href="{{ product.url }}"><h3>{{ product.title }}</h3></a>
+          <p>{{ product.description | strip_html | truncate: 50 }}</p>
+          <p class="price">{{ product.price | money }}</p>
+        </div>
+        <div class="info-right">
+          <button class="wishlist-btn" title="Add to Wishlist" data-product-handle="{{ product.handle }}">♡</button>
+          <button class="add-to-cart-btn" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+{% paginate collection.products by limit %}
+  <!-- Pagination or Load More goes here -->
+{% endpaginate %}

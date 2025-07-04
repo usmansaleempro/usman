@@ -1,0 +1,133 @@
+{% schema %}
+{
+  "name": "Collection Slider",
+  "tag": "section",
+  "settings": [],
+  "blocks": [
+    {
+      "type": "collection",
+      "name": "Collection Card",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "label": "Title (Optional)"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "label": "Short Description"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 10,
+  "presets": [
+    {
+      "name": "Collection Slider",
+      "category": "Custom"
+    }
+  ]
+}
+{% endschema %}
+
+<style>
+.collection-slider-wrapper {
+  overflow-x: auto;
+  padding: 2rem 0;
+  position: relative;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.collection-slider-container {
+  display: flex;
+  gap: 2rem;
+  padding-inline: 2rem;
+  width: max-content;
+}
+
+.collection-card {
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+  width: 477px;
+  height: 679px;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  text-align: center;
+  padding: 1rem;
+  transition: all 0.5s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.collection-card.enlarged {
+  width: 679px;
+  height: 477px;
+  z-index: 1;
+}
+
+.collection-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex-grow: 1;
+}
+
+.collection-card h3 {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+}
+
+.collection-card p {
+  color: #555;
+  font-size: 1rem;
+  margin-top: 0.5rem;
+}
+</style>
+
+<div class="collection-slider-wrapper">
+  <div class="collection-slider-container" id="sliderContainer">
+    {% for block in section.blocks %}
+      {% assign col = block.settings.collection %}
+      {% if col != blank %}
+        <div class="collection-card">
+          <a href="{{ col.url }}">
+            <img src="{{ col.image | image_url: width: 800 }}" alt="{{ col.title }}">
+          </a>
+          <h3>{{ block.settings.title | default: col.title }}</h3>
+          <p>{{ block.settings.description | default: col.description | truncate: 100 }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+</div>
+
+{% javascript %}
+function updateCardFocus() {
+  const container = document.getElementById('sliderContainer');
+  const cards = container.querySelectorAll('.collection-card');
+  const containerRect = container.getBoundingClientRect();
+  const centerX = containerRect.left + containerRect.width / 2;
+
+  cards.forEach(card => {
+    const rect = card.getBoundingClientRect();
+    const cardCenter = rect.left + rect.width / 2;
+    const distance = Math.abs(centerX - cardCenter);
+    card.classList.toggle('enlarged', distance < rect.width / 2);
+  });
+}
+
+const observer = new MutationObserver(updateCardFocus);
+observer.observe(document.getElementById('sliderContainer'), { childList: true, subtree: true });
+
+setInterval(updateCardFocus, 100);
+{% endjavascript %}

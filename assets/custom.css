@@ -1,0 +1,154 @@
+/*-----------------------------------------------------------------------------/
+/ Custom Theme CSS
+/-----------------------------------------------------------------------------*/
+/*---------------- Global Custom CSS -------------------*/
+.bgbl {
+  background-color: white;
+}
+.single_add_to_cart_button {
+border-radius:9px;
+}
+.product_meta{
+font-size:12px;
+}
+
+.mb_nav_tabs {
+  display: none;
+}
+
+.nt-swatch :hover{
+color:black !important;
+}
+.logo_mobile{
+width:150px !important;
+}
+.logo_sticky
+{
+width:130px !important;
+}
+
+/*---------------- Custom CSS for only desktop -------------------*/
+@media (min-width: 1025px) {
+  @media screen and (max-width: 1920px) {
+  .wishlistadd {
+    position: absolute;
+    margin-top: -255px;
+    margin-left: 159px;
+  }
+
+  .nt_add_w {
+    border: none;
+  }
+
+  .cat_view {
+    margin-top: -100px;
+    margin-left: 1500px;
+  }
+}
+
+@media screen and (max-width: 1620px) {
+  .wishlistadd {
+    position: absolute;
+    margin-top: -256px;
+    margin-left: 217px;
+  }
+
+  #collection-swtich {
+    margin-left: 1279px;
+    margin-top: -100px;
+  }
+}
+@media screen and (max-width: 1440px) {
+  .wishlistadd {
+    position: absolute;
+    margin-top: -255px;
+    margin-left: 217px;
+  }
+
+  #collection-swtich {
+   margin-left: 1064px;
+            margin-top: -100px;
+  }
+}
+@media screen and (max-width: 1366px) {
+  .wishlistadd {
+    position: absolute;
+    margin-top: -256px;
+    margin-left: 217px;
+  }
+
+  #collection-swtich {
+    margin-left: 925px;
+    margin-top: -82px;
+  }
+}
+
+.nt_add_w {
+    border:none !important;
+}
+.view_15{
+display:none;
+}
+
+svg {
+    vertical-align: middle;
+}
+.view_2{
+display:none ;
+}
+.menu_footer{
+position:relative;
+z-index:100;
+}
+}
+
+/*---------------- Custom CSS for tablet, mobile -------------------*/
+@media (max-width: 1024px) {
+  @media screen and (max-width: 1366px) {
+  #collection-swtich {
+    margin-top: -70px;
+    margin-left: 250px;
+  }
+}
+  .wishlistadd {
+    position: absolute;
+        position: absolute;
+    margin-top: -253px;
+    margin-left: 182px;
+  }
+.product_title {
+font-size:16px !important;
+}
+.nt_add_w {
+    border:none !important;
+}
+#breadcrumb{
+display:none;
+}
+.price_range{
+font-size:14px !important;
+}
+.product_meta{
+font-size:10px;
+}
+.dib{
+    margin-left: -85px;
+}
+.pe-7s-search , icon-tabler, icon-tabler-search{
+    transform: rotate(90deg) !important;
+}
+}
+
+/*---------------- Custom CSS for only tablet -------------------*/
+@media (min-width: 768px) and (max-width: 1024px) {
+  .pe-7s-search{
+    transform: rotate(90deg) !important;
+}
+}
+
+/*---------------- Custom CSS for only mobile -------------------*/
+@media (max-width: 767px){
+  .pe-7s-search{
+    transform: rotate(90deg) !important;
+}
+}

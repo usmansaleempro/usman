@@ -1,0 +1,160 @@
+{% schema %}
+{
+  "name": "Kids Slider",
+  "tag": "section",
+  "class": "collection-area",
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "label": "Section Title",
+      "default": "WHAT'S NEW"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "collection_item",
+      "name": "Collection",
+      "settings": [
+        {
+          "type": "collection",
+          "id": "collection",
+          "label": "Select Collection"
+        },
+        {
+          "type": "text",
+          "id": "custom_title",
+          "label": "Custom Collection Title",
+          "default": "Default"
+        }
+      ]
+    }
+  ],
+  "max_blocks": 20,
+  "presets": [
+    {
+      "name": "Kids Section",
+      "blocks": []
+    }
+  ]
+}
+{% endschema %}
+
+<section class="collection-area">
+  <div class="collection-wrapper">
+    <!-- Section Title (Fixed on the left) -->
+    <div class="collection-title">{{ section.settings.title }}</div>
+
+    <!-- Scrollable Collection Slides -->
+    <div class="scroll-row">
+      {% for block in section.blocks %}
+        {% assign collection = collections[block.settings.collection] %}
+        {% if collection %}
+          {% assign custom_title = block.settings.custom_title | strip %}
+          <div class="collection-slide">
+            <a href="{{ collection.url }}">
+              <img src="{{ collection.image | img_url: '150x150' }}" alt="{{ collection.title }}">
+              <p>
+                {% if custom_title != blank and custom_title != "Default" %}
+                  {{ custom_title }}
+                {% else %}
+                  {{ collection.title }}
+                {% endif %}
+              </p>
+            </a>
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<style>
+  @font-face {
+    font-family: 'Monstra';
+    src: url('path-to-monstra-font.woff2') format('woff2');
+  }
+
+  body {
+    font-family: 'Monstra', sans-serif;
+  }
+
+  .collection-area {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 2rem 1rem;
+  }
+
+  .collection-wrapper {
+    display: flex;
+    align-items: center;
+    max-width: 100%;
+    margin: 0 auto;
+  }
+
+  .collection-title {
+    margin-top:-23px;
+    font-size: 1.7rem;
+    color:black;
+    font-weight: 500;
+    flex-shrink: 0;
+    margin-right: 1rem;
+    white-space: nowrap;
+    text-align: center;
+  }
+
+  .scroll-row {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    padding-bottom: 0.5rem;
+  }
+
+  .scroll-row::-webkit-scrollbar {
+    display: none;
+  }
+
+  .collection-slide {
+    flex-shrink: 0;
+    text-align: center;
+  }
+
+  .collection-slide img {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .collection-slide p {
+    margin-top: 0.3rem;
+    font-size: 0.8rem;
+    font-weight: 300;
+    white-space: nowrap;
+  }
+
+  @media screen and (max-width: 768px) {
+    .collection-area {
+      padding: 1rem;
+    }
+
+    .collection-title {
+      font-size: 1rem;
+      margin-right: 0.75rem;
+    }
+
+    .collection-slide img {
+      width: 64px;
+      height: 64px;
+    }
+
+    .collection-slide p {
+      font-size: 0.75rem;
+    }
+  }
+</style>

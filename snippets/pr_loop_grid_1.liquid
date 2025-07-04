@@ -1,0 +1,604 @@
+{% comment %}
+  
+
+
+{%- liquid
+  assign collection = collections[block.settings.collection]
+  assign image = block.settings.image | default:collection.image
+  assign home_t = 'homepage.onboarding.collection_title' | t  | append:' #' | append:for_i
+  assign block_title = block.settings.title | default:collection.title | default:home_t
+-%}
+
+<!-- Carousel container: wrap around all products if using a carousel -->
+<div class="carousel-container">
+  <div class="custom-product-card" data-product-id="{{ product.id }}">
+    <a href="{{ product.url }}" class="custom-image-container">
+      <img src="{{ product.featured_image | img_url: '600x450' }}" alt="{{ product.title }}">
+    </a>
+    <div class="custom-info-row">
+      <div class="custom-info-left">
+        <a href="{{ product.url }}"><h3 class="custom-title">{{ product.title }}</h3></a>
+        <p class="custom-description">{{ product.collections.first.title | strip_html | truncate: 50 }}</p>
+        <p class="custom-price">{{ product.price | money }}</p>
+      </div>
+      <div class="custom-info-right">
+        <button class="custom-wishlist-btn" title="Add to Wishlist" data-product-handle="{{ product.handle }}">♡</button>
+        <button class="custom-add-to-cart-btn" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Base styles */
+  @media (max-width:1920px){
+.carousel-container
+{
+  margin-left:15px;
+  gap:0;
+}
+    
+  }
+
+.custom-product-card {
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #eee;
+ 
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s;
+  padding-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.custom-product-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+
+.custom-image-container {
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  overflow: hidden;
+  display: block;
+}
+
+.custom-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.custom-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 10px;
+  gap: 10px;
+}
+
+.custom-info-left {
+  flex: 0 0 60%;
+}
+
+.custom-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.custom-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.custom-price {
+  font-size: 14px;
+  font-weight: 600;
+  color: #222;
+  margin: 4px 0;
+}
+
+.custom-description {
+  font-size: 12px;
+  color: #555;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.custom-info-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.custom-wishlist-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000;
+  transition: color 0.3s;
+}
+
+.custom-wishlist-btn:hover {
+  color: #808080;
+}
+
+.custom-wishlist-btn.active {
+  color: #000;
+}
+
+.custom-add-to-cart-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+}
+
+.custom-product-card:hover .custom-add-to-cart-btn {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive: 2 per row on mobile */
+@media (max-width: 768px) {
+ 
+  .carousel-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .custom-product-card {
+    width: 48%;
+    margin-bottom: 15px;
+    font-size: 12px;
+  }
+
+  .custom-image-container {
+    aspect-ratio: 1 / 1;
+  }
+
+  .custom-title {
+    font-size: 12px;
+  }
+
+  .custom-description {
+    font-size: 11px;
+  }
+
+  .custom-price {
+    font-size: 12px;
+  }
+
+  .custom-add-to-cart-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .custom-wishlist-btn {
+    font-size: 16px;
+  }
+}
+
+/* Optional: carousel compatibility */
+.carousel-container {
+  display: flex;
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.carousel-container .custom-product-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  min-width: 250px;
+  max-width: 300px;
+}
+
+/* Extra small mobile — show 1 full-width item */
+@media screen and (max-width: 480px) {
+  .carousel-container {
+    justify-content: center;
+  }
+
+  .custom-product-card {
+    width: 48%;
+  }
+
+  .custom-title {
+    font-size: 11px;
+  }
+
+  .custom-description,
+  .custom-price {
+    font-size: 10px;
+  }
+
+  .custom-add-to-cart-btn {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+
+  .custom-wishlist-btn {
+    font-size: 14px;
+  }
+}
+
+</style>
+{% endcomment %}
+{%- liquid
+  assign pr_id = product.id 
+  assign pr_options = product.options_with_values
+  assign color_count = 0
+  if pr_options.size > 0 and show_color
+    assign color_ck = settings.color_ck | append:',color,colors,couleur,colour'
+    assign get_color = color_ck | downcase | replace: ' ,', ',' | replace: ', ', ',' | split: ',' | uniq
+    for option in pr_options
+      assign name = option.name | downcase
+      if get_color contains name
+        assign color_count = option.values.size
+        if show_cl_type == '2'
+          assign pr_option = forloop.index
+          assign nt_option = 'option'| append:pr_option
+          assign color_variants = product.variants | where: "available" | map:nt_option | uniq
+          assign color_count = color_variants.size
+        endif
+        break
+      endif
+    endfor
+  endif
+  assign countdown = time_meta | default:product.metafields.meta.countdown
+  assign pr_hdl = product.handle
+  assign product_url = product.url
+  assign images_0 = product.images[0] | default:settings.placeholder_img
+  assign get_locale = product_url | split:'/products/' | first -%}
+  {%- capture pr_url %}{{get_locale}}{{url_cat}}/products/{{pr_hdl}}{% endcapture -%}
+
+<div data-page="{{page_t4}}" class="col-lg-{{col}} col-md-{{col_tb}} col-{{col_mb}} mt__30 pr_grid_item product nt_pr desgin__2 tc">
+   <div class="product-inner pr">
+      {%- if countdown != blank and use_cdt -%}
+        <div class="pr_wr_dcimg pr oh">
+          <div class="product-image pr oh lazyload" data-include="{{pr_url}}/?view=img{{sett_equal}}"><div class="nt_bg_lz nt_fk_lz"{% unless sett_equal %} style="padding-top:{{ 1 | divided_by: images_0.aspect_ratio | times: 100}}%;"{% endunless %}></div></div>
+          <div class="pr_deal_dt pa pe_none op__0">
+            <span class="pr_title_dt">{{txt_cd}}</span> <span class="pr_coun_dt" data-date="{{countdown}}"></span>
+          </div>
+        </div>
+      {%- else -%}
+        <div class="product-image pr oh lazyload" data-include="{{pr_url}}/?view=img{{sett_equal}}"><div class="nt_bg_lz nt_fk_lz"{% unless sett_equal %} style="padding-top:{{ 1 | divided_by: images_0.aspect_ratio | times: 100}}%;"{% endunless %}></div></div>
+      {%- endif -%}
+        <div class="product-info custom-info-row">
+      <div class="custom-info-left">
+        <a href="{{ product.url }}"><h3 class="custom-title">{{ product.title }}</h3></a>
+        <p class="custom-description">{{ product.collections.first.title | strip_html | truncate: 50 }}</p>
+        <p class="custom-price">{{ product.price | money }}</p>
+      </div>
+      <div class="custom-info-right">
+        <a class="custom-wishlist-btn" title="Add to Wishlist" data-product-handle="{{ product.handle }}">♡</a>
+        <button class="custom-add-to-cart-btn" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+      </div>
+    </div>
+      {% comment %}
+        
+
+      <div class="product-info mt__15">
+         {%- if product.vendor.size > 0 and show_vendor -%}<div class="product-brand"><a class="cg chp" href="{{ product.vendor | url_for_vendor }}">{{ product.vendor }}</a></div>{%- endif -%}
+         <h3 class="product-title pr fs__14 mg__0 fwm"><a class="cd chp" href="{{product.url | within: collection}}">{{product.title}}</a></h3>
+         <span class="price dib mb__5">{%- render 'product_price',product:product,inc_price:inc_price -%}</span>
+         {%- if use_rating -%}{%- render 'rating',product:product,inc_rating:inc_rating -%}{%- endif -%}
+         {%- if color_count > 0 -%}
+         <div class="swatch__list_js swatch__list lh__1 nt_swatches_on_grid lazyload" data-colorCount="{{color_count}}" data-include="{{pr_url}}/?view=sw{{sett_equal}}"></div>
+         {%- endif -%}
+          <div class="custom-info-right">
+        <button class="custom-wishlist-btn" title="Add to Wishlist" data-product-handle="{{ product.handle }}">♡</button>
+        <button class="custom-add-to-cart-btn" data-variant-id="{{ product.variants.first.id }}">Add to Cart</button>
+      </div>
+      </div>
+            {% endcomment %}
+            
+   </div>
+</div>
+
+
+
+
+<style>
+  /* .col-lg-12 ,.col-12{
+ 
+        padding-right: 0px !important;
+        padding-left: 9px !important;
+ 
+  }
+.row {
+    display: -ms-flexbox;
+    display: flex
+;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    margin-right: -12.5px;
+    margin-left: -12.5px;}
+  
+ .desgin__2 .product-image
+{
+    border-radius:0px;
+  } */
+/* Base styles */
+  @media (max-width:1920px){
+.carousel-container
+{
+  margin-left:15px;
+  gap:0;
+}
+    
+  }
+
+.custom-product-card {
+  font-family: 'Montserrat', sans-serif;
+  border: 1px solid #eee;
+ 
+  overflow: hidden;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.3s;
+  padding-bottom: 20px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.custom-product-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
+.nt_add_w {
+  display:none;
+}
+  .hover_button {
+    display:none;
+  }
+.custom-image-container {
+  width: 100%;
+  aspect-ratio: 5 / 7;
+  overflow: hidden;
+  display: block;
+}
+
+.custom-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  display: block;
+}
+
+.custom-info-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 8px 10px;
+   text-align:left;
+  gap: 10px;
+}
+
+.custom-info-left {
+  flex: 0 0 60%;
+}
+
+.custom-title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-align:left;
+  line-height: 1.4;
+}
+
+.custom-title a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.custom-price {
+  font-size: 14px;
+  font-weight: 600;
+   text-align:left;
+  color: #222;
+  margin: 4px 0;
+}
+
+.custom-description {
+  font-size: 12px;
+  color: #555;
+  margin-top: 2px;
+  line-height: 1.3;
+}
+
+.custom-info-right {
+  display: flex;
+  flex-direction: column;
+   text-align:left;
+  align-items: flex-end;
+  gap: 6px;
+}
+
+.custom-wishlist-btn {
+  background: none;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: #000;
+  transition: color 0.3s;
+}
+
+.custom-wishlist-btn:hover {
+  color: #808080;
+}
+
+.custom-wishlist-btn.active {
+  color: #000;
+}
+
+.custom-add-to-cart-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 5px 10px;
+  font-size: 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+}
+
+.product-inner:hover .custom-add-to-cart-btn {
+  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Responsive: 2 per row on mobile */
+@media (max-width: 768px) {
+ 
+  .carousel-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 10px;
+  }
+
+  .custom-product-card {
+    width: 48%;
+    margin-bottom: 15px;
+    font-size: 12px;
+  }
+
+  .custom-image-container {
+    aspect-ratio: 1 / 1;
+  }
+
+  .custom-title {
+    font-size: 12px;
+  }
+
+  .custom-description {
+    font-size: 11px;
+  }
+
+  .custom-price {
+    font-size: 12px;
+  }
+
+  .custom-add-to-cart-btn {
+    font-size: 11px;
+    padding: 4px 8px;
+  }
+
+  .custom-wishlist-btn {
+    font-size: 16px;
+  }
+}
+
+/* Optional: carousel compatibility */
+.carousel-container {
+  display: flex;
+
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  gap: 12px;
+  padding: 10px 0;
+}
+
+.carousel-container .custom-product-card {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  min-width: 250px;
+  max-width: 300px;
+}
+/* 
+
+@media screen and (max-width: 480px) {
+  .carousel-container {
+    justify-content: center;
+  }
+
+  .custom-product-card {
+    width: 48%;
+  }
+
+  .custom-title {
+    font-size: 11px;
+  }
+
+  .custom-description,
+  .custom-price {
+    font-size: 10px;
+  }
+
+  .custom-add-to-cart-btn {
+    padding: 3px 6px;
+    font-size: 10px;
+  }
+
+  .custom-wishlist-btn {
+    font-size: 14px;
+  }
+}
+ */
+  /* Extra small mobile — show 1 full-width item */
+@media screen and (max-width: 480px) {
+  .owl-carousel .item {
+    width: 100%;
+  }
+   .info-left h3 {
+  margin: 0;
+  font-size: 0.5rem;
+  font-weight: 600;
+  line-height: 1;
+}
+  .info-left p {
+  font-size: 0.4rem;
+  color: #555;
+  margin-top: 2px;
+  line-height: 1;
+}
+.info-left .price {
+  font-size: 0.5rem;
+  font-weight: 600;
+  color: #222;
+  margin: 4px 0;
+}
+.add-to-cart-btn {
+  background-color: #000;
+  color: #fff;
+  border: none;
+  padding: 2px 5px;
+  font-size: 0.5rem;
+  border-radius: 5px;
+  cursor: pointer;
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: all 0.3s ease;
+}
+}
+
+</style>
+

@@ -1,0 +1,33 @@
+{% schema %}
+  {
+    "name": "pop-size-chart",
+    "settings": []
+  }
+{% endschema %}
+{% comment %}
+  Pop Size Chart Section
+  - Displays a size chart image from product metafield: custom.pop_size_chart
+  - Metafield type: file_reference (image)
+{% endcomment %}
+
+{% if product.metafields.custom.pop_size_chart %}
+  {% assign chart_file = product.metafields.custom.pop_size_chart.value %}
+  {% if chart_file.media_type == 'image' %}
+    <div class="pop-size-chart mt-6 border-t pt-4">
+      <h3 class="text-xl font-semibold mb-2">Size Chart</h3>
+      <img 
+        src="{{ chart_file | img_url: 'master' }}" 
+        alt="Size chart for {{ product.title }}"
+        class="rounded-lg border max-w-full h-auto"
+        loading="lazy"
+      >
+    </div>
+  {% else %}
+    <div class="pop-size-chart mt-6 border-t pt-4">
+      <h3 class="text-xl font-semibold mb-2">Size Chart</h3>
+      <a href="{{ chart_file.url }}" target="_blank" class="text-blue-600 underline">
+        View Size Chart
+      </a>
+    </div>
+  {% endif %}
+{% endif %}

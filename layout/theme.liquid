@@ -1,0 +1,87 @@
+<!doctype html>
+<html class="no-js" lang="{{ request.locale.iso_code }}">
+  <meta name="facebook-domain-verification" content="esa7rctrv3k18vhdqrlu5a91wdfqpc" />
+<head>
+  <!-- TikTok Pixel Code Start -->
+<script>
+!function (w, d, t) {
+  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=["page","track","identify","instances","debug","on","off","once","ready","alias","group","enableCookie","disableCookie","holdConsent","revokeConsent","grantConsent"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(
+var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r="https://analytics.tiktok.com/i18n/pixel/events.js",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement("script")
+;n.type="text/javascript",n.async=!0,n.src=r+"?sdkid="+e+"&lib="+t;e=document.getElementsByTagName("script")[0];e.parentNode.insertBefore(n,e)};
+
+
+  ttq.load('D1FRINJC77U39E3NVNP0');
+  ttq.page();
+}(window, document, 'ttq');
+</script>
+<!-- TikTok Pixel Code End -->
+ {%- render 'ecom_header' -%}
+ <meta name="google-site-verification" content="Iwi5FjR89gG4HjCCyIdKuEmjtGwp1l_T1coPGoMliPE" />
+  <meta name="facebook-domain-verification" content="s3kpqfzdf7ml689hi4xksktnkkp70l" />
+  <meta name="p:domain_verify" content="ecd3f1b5575ef66ffa4cbeba9574f753"/>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+  <meta name="theme-color" content="{{ settings.color_primary }}">
+  <meta name="format-detection" content="telephone=no">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/line-awesome/1.3.0/line-awesome/css/line-awesome.min.css" rel="stylesheet">
+
+  {%- comment -%}
+  <link rel="dns-prefetch" href="https://{{shop.domain}}" crossorigin>
+  <link rel="dns-prefetch" href="https://{{shop.permanent_domain}}" crossorigin>
+  {%- endcomment -%}
+  <link rel="prefetch" as="document" href="https://{{shop.domain}}">
+  <link rel="dns-prefetch" href="https://cdn.shopify.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.shopifycdn.com" crossorigin>
+  <link rel="dns-prefetch" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://cdn.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.shopify.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin>
+  <link rel="preconnect" href="https://monorail-edge.shopifysvc.com">
+  <link rel="preload" as="style" href="{{ 'pre_theme.min.css' | asset_url }}">
+  <link rel="preload" as="style" href="{%- render 'enable_minify' with 'css' ,nameFile:'theme.css' -%}">
+  {%- capture seo_title -%}
+    {%- if template == 'search' and search.performed == true -%}{{ 'general.search.heading' | t: count: search.results_count }}: {{ 'general.search.results_with_count' | t: terms: search.terms, count: search.results_count }}{%- elsif template == 'search.wish' %}{{ 'general.meta.wishlist' | t }}{%- elsif template == 'search.compe' %}{{ 'general.meta.compare' | t }}{%- else -%}{{ page_title }}{%- endif -%}
+    {%- if current_tags -%}{%- assign meta_tags = current_tags | join: ', ' %} &ndash; {{ 'general.meta.tags' | t: tags: meta_tags -}}{%- endif -%}
+    {%- if current_page != 1 %} &ndash; {{ 'general.meta.page' | t: page: current_page }}{%- endif -%}
+    {%- assign escaped_page_title = page_title | escape -%}
+    {%- unless escaped_page_title contains shop.name %} &ndash; {{ shop.name }}{%- endunless -%}
+  {%- endcapture -%}
+  <title>{{ seo_title | strip }}</title>
+  {%- if page_description %}<meta name="description" content="{{ page_description | escape }}">
+  {%- elsif collection.current_type or collection.current_vendor %}<meta name="description" content="{{ shop.description | default: shop.name | escape }}">{% endif -%}
+  {%- if settings.favicon != blank %}<link rel="shortcut icon" type="image/png" href="{{ settings.favicon | img_url: '32x' }}">{% endif -%}
+  {%- if settings.favicon_apple != blank %}<link rel="apple-touch-icon-precomposed" type="image/png" sizes="152x152" href="{{ settings.favicon_apple | img_url: '152x' }}">{% endif -%}
+  {%- liquid 
+    assign t_name = request.page_type
+    assign body_img = settings.body_bg_image
+    render 'social-meta-tags',t_name:t_name
+    render 'head_assets',t_name:t_name
+    capture class_body_theme 
+      render 'class_body_theme',t_name:t_name, body_img:body_img 
+    endcapture -%}
+
+    {{ content_for_header }}
+
+  {% render 'shogun-head' %}
+</head>
+<body {{class_body_theme | strip_newlines-}}>
+  {%- render 'lazypreload' -%}
+  <div id="nt_wrapper">
+    {%- render 'header',t_name:t_name -%}
+    <div id="nt_content">{{ content_for_layout }}</div>
+    <footer id="nt_footer" class="bgbl footer-1">{%- section 'footer_top' -%}{%- section 'footer_bot' -%}</footer>
+  </div>
+  {%- render 'div_html',t_name:t_name -%}
+  
+{%- render "ecom_footer"-%}</body>
+</html>
+
+<style>
+#purchase_codet4:not(.hidden):not(.hide) {
+display: none !important;
+}
+#purchase_codet4{
+display: none !important;
+}
+</style>

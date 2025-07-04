@@ -1,0 +1,92 @@
+{% schema %}
+{
+  "name": "Size Chart Popup",
+  "settings": [
+    {
+      "type": "text",
+      "id": "metafield_namespace",
+      "label": "Metafield Namespace",
+      "default": "custom"
+    },
+    {
+      "type": "text",
+      "id": "metafield_key",
+      "label": "Metafield Key",
+      "default": "size_chart"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label",
+      "default": "View Size Chart"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Size Chart Popup",
+      "category": "Product"
+    }
+  ]
+}
+{% endschema %}
+
+{% stylesheet %}
+.size-chart-button {
+  padding: 0.5rem 1rem;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.size-chart-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+.size-chart-modal.active {
+  display: flex;
+}
+.size-chart-modal-content {
+  background: #fff;
+  max-width: 600px;
+  max-height: 80vh;
+  overflow-y: auto;
+  padding: 2rem;
+  border-radius: 8px;
+  position: relative;
+}
+.size-chart-close {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+{% endstylesheet %}
+
+{% assign ns = section.settings.metafield_namespace %}
+{% assign key = section.settings.metafield_key %}
+{% assign size_chart_html = product.metafields[ns][key] %}
+
+{% if size_chart_html %}
+  <button class="size-chart-button" onclick="document.querySelector('.size-chart-modal').classList.add('active')">
+    {{ section.settings.button_label }}
+  </button>
+
+  <div class="size-chart-modal" onclick="this.classList.remove('active')">
+    <div class="size-chart-modal-content" onclick="event.stopPropagation()">
+      <button class="size-chart-close" onclick="this.closest('.size-chart-modal').classList.remove('active')">&times;</button>
+      {{ size_chart_html | metafield_tag }}
+    </div>
+  </div>
+{% endif %}
